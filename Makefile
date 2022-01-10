@@ -10,3 +10,6 @@ place-configs: backup
 
 extra-tmux:
 	bash -x extra.sh
+
+reload:
+	tmux source-file ~/.tmux.conf
