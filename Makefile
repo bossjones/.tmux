@@ -33,10 +33,18 @@ place-configs: backup
 	fi
 	ln -v -s -f ~/dev/bossjones/oh-my-tmux/.tmux.conf ~/.tmux.conf
 	cp -av ~/dev/bossjones/oh-my-tmux/.tmux.conf.local ~/.tmux.conf.local
-	tmux source-file ~/.tmux.conf
+	@if tmux info >/dev/null 2>&1; then \
+		tmux source-file ~/.tmux.conf && echo "reloaded running tmux"; \
+	else \
+		echo "configs placed; no tmux server running. Start tmux (or reload with <prefix> r) to load them."; \
+	fi
 
 extra-tmux:
 	bash -x extra.sh
 
 reload:
-	tmux source-file ~/.tmux.conf
+	@if tmux info >/dev/null 2>&1; then \
+		tmux source-file ~/.tmux.conf && echo "reloaded running tmux"; \
+	else \
+		echo "no tmux server running; nothing to reload. Start tmux to load the config."; \
+	fi
