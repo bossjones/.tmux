@@ -25,10 +25,14 @@ backup:
 	ls -lta backup.tar.gz
 
 place-configs: backup
-	mkdir -p ~/dev/bossjones || true
-	git clone git@github.com:bossjones/.tmux.git ~/dev/bossjones/oh-my-tmux || true
-	ln -v -s -f ~/dev/bossjones/oh-my-tmux/.tmux.conf ~/.tmux.conf || true
-	cp -av ~/dev/bossjones/oh-my-tmux/.tmux.conf.local ~/.tmux.conf.local || true
+	mkdir -p ~/dev/bossjones
+	if [ -d ~/dev/bossjones/oh-my-tmux/.git ]; then \
+		git -C ~/dev/bossjones/oh-my-tmux pull --ff-only; \
+	else \
+		git clone git@github.com:bossjones/.tmux.git ~/dev/bossjones/oh-my-tmux; \
+	fi
+	ln -v -s -f ~/dev/bossjones/oh-my-tmux/.tmux.conf ~/.tmux.conf
+	cp -av ~/dev/bossjones/oh-my-tmux/.tmux.conf.local ~/.tmux.conf.local
 	tmux source-file ~/.tmux.conf
 
 extra-tmux:
