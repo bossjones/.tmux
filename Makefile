@@ -21,8 +21,15 @@ test:
 .PHONY: docker-build docker-run docker-smoke test
 
 backup:
-	tar -cjvf backup.tar.gz ~/dev/bossjones/oh-my-tmux/.tmux.conf ~/.tmux.conf.local
-	ls -lta backup.tar.gz
+	@files=""; \
+	for f in "$$HOME/.tmux.conf" "$$HOME/.tmux.conf.local"; do \
+		if [ -e "$$f" ]; then files="$$files $$f"; fi; \
+	done; \
+	if [ -n "$$files" ]; then \
+		tar -cjvf backup.tar.gz $$files && ls -lta backup.tar.gz; \
+	else \
+		echo "no existing tmux configs to back up; skipping"; \
+	fi
 
 place-configs: backup
 	mkdir -p ~/dev/bossjones
