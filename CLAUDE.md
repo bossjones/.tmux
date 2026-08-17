@@ -52,6 +52,8 @@ The `tmux-prefix-highlight` indicator is surfaced by the `#{prefix_highlight}` t
 - `set -g mouse on`
 - the 4-plugin TPM block + `@resurrect-capture-pane-contents`/`@continuum-restore`
 - `#{prefix_highlight}` appended to `tmux_conf_theme_status_right`
+- `tmux_conf_theme_mode_fg`/`_mode_bg` overridden to literal `#ffffff`/`#005f87` (dark blue/white, instead of deriving from `tmux_conf_theme_colour_5`) so the `choose-tree`/copy-mode selection bar isn't bright yellow
+- `bind-key -T prefix w choose-tree -Zw -F '...'` — colorizes active/activity/bell/zoomed window indicators and the window name in the `prefix + w` chooser; the session name and window index labels themselves are drawn by tmux internally and aren't recolorable via `-F`
 
 ## New Template Options (since the sync)
 
