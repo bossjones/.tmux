@@ -31,6 +31,11 @@ jobs:
       - name: Install test dependencies
         run: uv sync --group dev
 
+      - name: Fetch tmux-menus (pinned) for plugin integration tests
+        run: |
+          git clone --depth 1 --branch v2.4.1 https://github.com/jaclu/tmux-menus "$RUNNER_TEMP/tmux-menus"
+          echo "TMUX_MENUS_SRC=$RUNNER_TEMP/tmux-menus" >> "$GITHUB_ENV"
+
       - name: Run TDD contract test suite
         run: uv run pytest -q
         env:

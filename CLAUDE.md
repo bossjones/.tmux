@@ -37,6 +37,7 @@ Plugins are declared in `.tmux.conf.local` with `set -g @plugin`. Currently acti
 - `tmux-plugins/tmux-prefix-highlight` — prefix indicator in status bar
 - `tmux-plugins/tmux-continuum` — auto-restore on launch
 - `sainnhe/tmux-fzf` — fzf integration
+- `jaclu/tmux-menus` — popup action menus on `<prefix> \`; press `!` in any menu to see the real key bindings (see `specs/tmux-menus.md`; styling options with screenshots in `docs/tmux-menus/README.md`)
 
 **Do not** add `set -g @plugin 'tmux-plugins/tpm'` or `run '~/.tmux/plugins/tpm/tpm'` — TPM bootstrapping is handled automatically by the base `.tmux.conf`.
 
@@ -50,7 +51,8 @@ The `tmux-prefix-highlight` indicator is surfaced by the `#{prefix_highlight}` t
 - `if-shell`-guarded `reattach-to-user-namespace` block (macOS-only; a no-op on Linux)
 - `set -g history-limit 20000`
 - `set -g mouse on`
-- the 4-plugin TPM block + `@resurrect-capture-pane-contents`/`@continuum-restore`
+- the 5-plugin TPM block + `@resurrect-capture-pane-contents`/`@continuum-restore`
+- `set -g @menus_trigger '\'` (explicit, so tmux-menus never claims its secondary default `<prefix> Enter`, which oh-my-tmux binds to `copy-mode`)
 - `#{prefix_highlight}` appended to `tmux_conf_theme_status_right`
 
 ## New Template Options (since the sync)
