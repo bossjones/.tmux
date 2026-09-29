@@ -79,7 +79,7 @@ No fzf, no `tree-mode-*` options (not supported by the installed tmux), no edits
   #{?window_active,#[fg=green#,bold]*#[default],}\
   #{?window_zoomed_flag,#[fg=cyan#,bold]Z#[default],}\
   #{?window_bell_flag,#[fg=red#,bold]!#[default],}\
-  #{?#{&&:#{window_activity_flag},#{!window_bell_flag}},#[fg=yellow#,bold]###[default],}\
+  #{?window_bell_flag,,#{?window_activity_flag,#[fg=yellow#,bold]###[default],}}\
   #{?#{&&:#{==:#{window_panes},1},#{&&:#{pane_title},#{!=:#{pane_title},#{host_short}}}},: \"#{pane_title}\",},\
   #{session_windows} windows#{?session_grouped, (group #{session_group}: #{session_group_list}),}#{?session_attached, (attached),}}}"
   ```
