@@ -26,6 +26,7 @@ Design notes
 """
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 import uuid
@@ -174,6 +175,18 @@ def _start_server(home: Path, monkeypatch: pytest.MonkeyPatch) -> libtmux.Server
        (The startup ``run`` commands that do the same thing are asynchronous.)
     """
     monkeypatch.setenv("HOME", str(home))
+    # When pytest itself runs inside tmux, the parent server's TMUX* variables
+    # leak in and are DANGEROUS:
+    #   * TMUX_CONF_LOCAL makes test servers source the real ~/.tmux.conf.local;
+    #   * TMUX_SOCKET points oh-my-tmux's async _apply_configuration at the
+    #     real server;
+    #   * TMUX_PLUGIN_MANAGER_PATH makes a server whose config declares no
+    #     plugins (the stock fixture) *delete* that directory -- i.e. the
+    #     user's real ~/.tmux/plugins (see the "uninstalling tpm and plugins"
+    #     branch of _apply_plugins in .tmux.conf).
+    # Clear every TMUX* variable, as CI does.
+    for var in [v for v in os.environ if v.startswith("TMUX")]:
+        monkeypatch.delenv(var, raising=False)
 
     socket_name = f"pytest_{uuid.uuid4().hex[:10]}"
     server = libtmux.Server(
@@ -210,7 +223,7 @@ def tmux_server(
     server = _start_server(tmux_home, monkeypatch)
     yield server
     try:
-        server.kill_server()
+        server.kill()
     except Exception:  # noqa: BLE001
         pass  # Already dead is fine
 
@@ -228,7 +241,7 @@ def stock_tmux_server(
     server = _start_server(stock_tmux_home, monkeypatch)
     yield server
     try:
-        server.kill_server()
+        server.kill()
     except Exception:  # noqa: BLE001
         pass
 

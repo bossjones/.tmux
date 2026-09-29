@@ -462,6 +462,12 @@ set -g @resurrect-capture-pane-contents 'on'
 ## Restore last saved environment (automatically)
 set -g @continuum-restore 'on'
 set -g @plugin 'sainnhe/tmux-fzf'
+set -g @plugin 'jaclu/tmux-menus'
+## tmux-menus: <prefix> \ opens the action menu; press ! in any menu to see the
+## real key bindings. Set explicitly so the secondary <prefix> Enter default is
+## never probed (oh-my-tmux binds Enter to copy-mode).
+## https://github.com/jaclu/tmux-menus#menu-trigger-key
+set -g @menus_trigger '\'
 
 
 # -- custom variables ----------------------------------------------------------

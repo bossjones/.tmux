@@ -16,6 +16,9 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-v --tb=short"
+markers = [
+    "plugin_integration: runs a real third-party TPM plugin checkout against a hermetic tmux server (needs TMUX_MENUS_SRC or ~/.tmux/plugins/tmux-menus)",
+]
 
 [tool.uv]
 # This is a test-only project; don't install it as a Python package.

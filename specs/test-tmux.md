@@ -5,7 +5,7 @@
 This repo is a fork of `gpakosz/.tmux` ("oh-my-tmux"): a two-file tmux config —
 `.tmux.conf` (upstream base, **never edited**) plus `.tmux.conf.local` (all of our
 deviations). `CLAUDE.md` documents a precise contract of how our `.local` differs
-from the upstream template (clipboard, history, mouse, the 4-plugin TPM block,
+from the upstream template (clipboard, history, mouse, the 5-plugin TPM block,
 the `#{prefix_highlight}` status token, the macOS `reattach` guard, sentinel
 fences). The only automated check is `make docker-smoke`, which boots a headless
 tmux in a container and eyeballs two options.
@@ -74,6 +74,9 @@ commands in `.local`, independent of TPM.
 | `tmux-prefix-highlight` plugin | .local:458 | Static | test_local_static.py |
 | `tmux-continuum` plugin | .local:459 | Static | test_local_static.py |
 | `sainnhe/tmux-fzf` plugin | .local:464 | Static | test_local_static.py |
+| `jaclu/tmux-menus` plugin (after tmux-fzf) | .local:465 | Static | test_local_static.py |
+| `@menus_trigger '\'` | .local:470 | Static | test_local_static.py |
+| `<prefix> \` → tmux-menus, `<prefix> Enter` stays `copy-mode` | real plugin init | Live, opt-in (`-m plugin_integration`, needs `TMUX_MENUS_SRC`) | test_menus_plugin.py |
 | `@resurrect-capture-pane-contents 'on'` | .local:461 | Static | test_local_static.py |
 | `@continuum-restore 'on'` | .local:463 | Static | test_local_static.py |
 | No `tmux-plugins/tpm` manual bootstrap | .local (absent) | Static | test_local_static.py |

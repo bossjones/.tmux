@@ -6,7 +6,7 @@ Why static tests alongside live ones?
   TPM uses ``set -g @plugin`` as a user-option trick.  Only the *last* value
   set for a user option survives in the running tmux server, so querying
   ``show-options -g @plugin`` would only reveal the last plugin declared.
-  Parsing the file text is the only reliable way to verify all four declarations.
+  Parsing the file text is the only reliable way to verify all five declarations.
   The sentinel fences and variable assignments like ``tmux_conf_*`` are also
   shell / parser artifacts that aren't visible via tmux option queries.
 
@@ -66,6 +66,27 @@ def test_plugin_tmux_fzf(local_config_text: str) -> None:
     )
 
 
+def test_plugin_tmux_menus(local_config_text: str) -> None:
+    """
+    ``jaclu/tmux-menus`` must be declared (issue #8).
+
+    .tmux.conf.local: TPM plugin block, after sainnhe/tmux-fzf
+    """
+    assert "set -g @plugin 'jaclu/tmux-menus'" in local_config_text, (
+        "tmux-menus @plugin declaration is missing from .tmux.conf.local.  "
+        "Restore: set -g @plugin 'jaclu/tmux-menus'"
+    )
+
+
+def test_menus_declared_after_tmux_fzf(local_config_text: str) -> None:
+    """Keep the TPM block ordered: tmux-menus is appended after tmux-fzf."""
+    fzf = local_config_text.find("set -g @plugin 'sainnhe/tmux-fzf'")
+    menus = local_config_text.find("set -g @plugin 'jaclu/tmux-menus'")
+    assert fzf != -1 and menus != -1 and fzf < menus, (
+        "jaclu/tmux-menus must be declared after sainnhe/tmux-fzf in the TPM block."
+    )
+
+
 # ---------------------------------------------------------------------------
 # Plugin option declarations
 # ---------------------------------------------------------------------------
@@ -90,6 +111,18 @@ def test_continuum_restore_on(local_config_text: str) -> None:
     """
     assert "set -g @continuum-restore 'on'" in local_config_text, (
         "@continuum-restore 'on' is missing from .tmux.conf.local."
+    )
+
+
+def test_menus_trigger_backslash(local_config_text: str) -> None:
+    """
+    The tmux-menus trigger must be set explicitly to ``\\`` so the plugin never
+    probes its secondary default ``<prefix> Enter`` (oh-my-tmux binds Enter to
+    copy-mode, .tmux.conf:117).  See docs/SecondaryDefault.md in jaclu/tmux-menus.
+    """
+    assert "set -g @menus_trigger '\\'" in local_config_text, (
+        "Expected: set -g @menus_trigger '\\'  (single-quoted backslash, "
+        "per tmux-menus docs/QuotingPitfalls.md)"
     )
 
 
